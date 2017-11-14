@@ -4,7 +4,9 @@ var baddies;
 var stars;
 var score = 0;
 var scoreText;
+var restartText;
 var spaceKey;
+var escapeKey;
 
 var game = new Phaser.Game(800, 600, Phaser.AUTO, '', {
   preload: preload,
@@ -40,9 +42,15 @@ function create() {
     fill: '#000'
   });
 
+  restartText = game.add.text(game.width - 200, 16, '[Esc] to restart', {
+    fontSize: '15px',
+    fill: '#000'
+  });
+
   //  Our controls.
   cursors = game.input.keyboard.createCursorKeys();
   spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+  escapeKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
 }
 
 function update() {
@@ -86,12 +94,11 @@ function handleKeys(hitPlatform) {
     player.body.velocity.y = -350;
   }
 
-  if (this.spaceKey.isDown) {
-    console.log('Pressed');
-  }
   if ((scoreText.text === 'Game over ! [Space] to restart' || scoreText.text === 'Well played ! [Space] to restart') && this.spaceKey.isDown) {
-    console.log('Restarting...');
     restartGame();
+  }
+  if (this.escapeKey.isDown) {
+    restartGame()
   }
 }
 
@@ -123,6 +130,7 @@ function collectStar(player, star) {
 
 function baddieTouchedStar(baddie, star) {
   // Kill a star if it touches a baddie
+  stars.remove(star);
   star.kill();
 }
 
